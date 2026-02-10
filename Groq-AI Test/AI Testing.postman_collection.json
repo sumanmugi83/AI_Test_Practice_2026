@@ -1,0 +1,58 @@
+{
+  "info": {
+    "_postman_id": "4839ccb6-25a4-495a-bf2d-b2b1beb24689",
+    "name": "AI Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1147482",
+    "_collection_link": "https://go.postman.co/collection/1147482-4839ccb6-25a4-495a-bf2d-b2b1beb24689?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Groq",
+      "item": [
+        {
+          "name": "Sample",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer $GROQ_API_KEY"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [{\n      \"role\": \"user\",\n      \"content\": \"Explain the importance of fast language models\"\n  }]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.groq.com/openai/v1/chat/completions",
+              "protocol": "https",
+              "host": [
+                "api",
+                "groq",
+                "com"
+              ],
+              "path": [
+                "openai",
+                "v1",
+                "chat",
+                "completions"
+              ]
+            },
+            "description": "Generated from cURL: curl https://api.groq.com/openai/v1/chat/completions -s \\\n-H \"Content-Type: application/json\" \\\n-H \"Authorization: Bearer $GROQ_API_KEY\" \\\n-d '{\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [{\n      \"role\": \"user\",\n      \"content\": \"Explain the importance of fast language models\"\n  }]\n}'"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
