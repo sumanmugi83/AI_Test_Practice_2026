@@ -1,0 +1,423 @@
+{
+  "name": "Automated LinkedIn Post Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -448,
+        -96
+      ],
+      "id": "ecf8c5e6-e41f-49f2-8f91-07b20efe3274",
+      "name": "When chat message received",
+      "webhookId": "c8a73e23-e21e-4ecd-bf12-90aa3e17b05e"
+    },
+    {
+      "parameters": {
+        "content": "# Generate the Topic\n** Generate the Topic, It will a a prompt.",
+        "height": 416,
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "cdce75b1-7daa-490c-a7aa-833ddcbbb989",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        96
+      ],
+      "id": "f6f54e7f-f2a3-42a8-b859-c802963db266",
+      "name": "Groq Chat Model",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "e0f82eb7-3320-40d9-bbdd-6bb8d11c1bb3",
+      "name": "Gemini Brain",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "etM166LFYeH5imwi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n  {\n      \"title\" : \"AI is coming for QA Jobs\",\n    \"rationale\" : \"Why you think this post should exist. \",\n    \"hook\" : \"2026 is the end of QA\"\n  }\n  \n]"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        32,
+        0
+      ],
+      "id": "71571704-8430-41bf-9976-af7927519992",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a senior QA architect and industry analyst writing in 2026.\n\nYour task is to generate ONLY ONE topic about:\n\n\"Software Testing in 2026\"\n\nConstraints:\n- Choose the single most impactful and future-defining shift.\n- Avoid generic themes unless you provide a deeply unique angle.\n- The topic must be bold, specific, and insight-driven.\n- It should reflect a real structural change in the industry (not surface-level trends).\n- The topic must be strong enough to anchor a keynote talk.\n\nOutput format:\n\n1. Title (clear, bold, thought-provoking)\n2. One-sentence thesis (strong and definitive)\n3. Why this topic matters in 2026 (5–7 bullet points with reasoning)\n\nDo NOT generate multiple topics.\nDo NOT provide alternatives.\nCommit to one topic and defend it.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -144,
+        -176
+      ],
+      "id": "b206140f-da49-43df-902b-60422ada9fa5",
+      "name": "Topic Creator AI Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a high-performing LinkedIn content strategist and B2B copywriter.\n\nInput:\n- Title: {{ $json.output[0].title }}\n- Rationale: {{ $json.output[0].rationale }}\n- Suggested Hook: {{ $json.output[0].hook }}\n\nYour task:\nCreate a high-engagement LinkedIn post based on the inputs.\n\nRequirements:\n\n1. Start with the provided hook (optimize it if necessary for stronger scroll-stopping impact).\n2. Expand the core idea clearly and persuasively.\n3. Maintain a strong narrative flow (problem → shift → insight → implication).\n4. Keep it practical and insight-driven (no fluff or generic motivation).\n5. Use short paragraphs for readability.\n6. Include 3–5 sharp bullet points if helpful.\n7. End with:\n   - A strong takeaway or forward-looking statement\n   - A conversation-driving question\n\nTone:\n- Authoritative but conversational\n- Insightful and slightly bold\n- Written for professionals in tech/QA/engineering leadership\n\nLength:\n- 150–300 words\n\nAfter the post, also provide:\n\nImage Suggestion:\n- Describe a visually striking, professional image concept\n- Include composition details (foreground, background, objects, mood)\n- Make it suitable for LinkedIn (clean, modern, minimal)\n- The image should reinforce the main message of the post",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        480,
+        -80
+      ],
+      "id": "5eea704e-036f-4eb4-b204-3571eefc5a0a",
+      "name": "Content Create - AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"post title\": \"Exciting New Feature Launch 🚀\",\n  \"post content\": \"After months of collaboration, testing, and fine-tuning, we're thrilled to introduce our latest product feature: Smart Insights. It helps users uncover meaningful patterns in their data with just a few clicks. This wouldn't have been possible without our incredible team and supportive community. We're excited for what's next — and we'd love your feedback!\",\n  \"image description\": \"A laptop screen showcasing the new Smart Insights dashboard with colorful charts and graphs, surrounded by a team clapping in the background.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        656,
+        128
+      ],
+      "id": "35bb19ad-0e96-469b-b502-21512bef6cef",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-pro-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        336,
+        16
+      ],
+      "id": "41d61c00-cc17-4f64-ac73-a01cce8e7514",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "etM166LFYeH5imwi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Take the Topic and Create a LinkiedIN POST\n** Generate the content based on the Topic",
+        "height": 416,
+        "width": 720
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        256,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "e6122a03-f786-4995-9be8-f465179bc6d6",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1xSlJDviSBWD7E1o-qbG5kzriGagoIXgv73nRpJgjI5M",
+          "mode": "list",
+          "cachedResultName": "Linkedin POST DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xSlJDviSBWD7E1o-qbG5kzriGagoIXgv73nRpJgjI5M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xSlJDviSBWD7E1o-qbG5kzriGagoIXgv73nRpJgjI5M/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post": "={{ $('Content Create - AI Agent').item.json.output['post content'] }}"
+          },
+          "matchingColumns": [
+            "post"
+          ],
+          "schema": [
+            {
+              "id": "post",
+              "displayName": "post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "image url",
+              "displayName": "image url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        784,
+        -64
+      ],
+      "id": "1ab39a8a-c08f-4e0b-8513-a39140b0dc70",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lLwP12Zhy1Z9Mzkl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "inputType": "binary"
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1536,
+        -96
+      ],
+      "id": "fa34442c-1956-4926-86be-52bf3a2e6f9d",
+      "name": "Upload a media file",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "etM166LFYeH5imwi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "user": "pramod",
+        "platform": [
+          "linkedin",
+          "x"
+        ],
+        "title": "={{ $('Content Create - AI Agent').item.json.output['post content'] }}",
+        "linkedinTitle": "={{ $('Topic Creator AI Agent').item.json.output[0].title }}",
+        "xTitle": "={{ $('Topic Creator AI Agent').item.json.output[0].title }}",
+        "photos": "={{ $json.fileUri }}",
+        "targetLinkedinPageId": "me"
+      },
+      "type": "n8n-nodes-upload-post.uploadPost",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        -48
+      ],
+      "id": "68075eeb-2fee-4b1d-aaf9-99c165f42db5",
+      "name": "Upload photos",
+      "credentials": {
+        "uploadPostApi": {
+          "id": "qntJUmoHkG6bSYX8",
+          "name": "Upload Post account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-image",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-image (Nano Banana)"
+        },
+        "prompt": "={{ $('Content Create - AI Agent').item.json.output['image description'] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1072,
+        112
+      ],
+      "id": "fe9e386e-ff59-4c2b-a4ee-57e55d05f99f",
+      "name": "Generate an image1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "etM166LFYeH5imwi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Topic Creator AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Gemini Brain": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Topic Creator AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Topic Creator AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Topic Creator AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Content Create - AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Content Create - AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Create - AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Create - AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Upload a media file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload a media file": {
+      "main": [
+        [
+          {
+            "node": "Upload photos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c6b5b8e0-9f87-4a94-813d-aea113888f84",
+  "meta": {
+    "instanceId": "be5d801bce0a2af76cda35ec1e83d0bd5021cc87bda0d9b26d690771b778dc09"
+  },
+  "id": "xskncPNGoD9tR5DN",
+  "tags": []
+}
