@@ -64,5 +64,3 @@ No explanations or additional content.
 T — Tone
 Technical, precisly, enterprise-grade, code-one.
 
-
-
